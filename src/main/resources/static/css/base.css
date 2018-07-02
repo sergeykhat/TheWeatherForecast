@@ -1,0 +1,103 @@
+body {
+    padding: 0;
+    margin: 0;
+}
+
+.provider {
+    color: rgb(250, 240, 254);
+    margin-right: 15px;
+    position:absolute;
+    bottom:0;
+    right:0;
+}
+
+.even {
+    background-color: #fffaf1;
+    width: 12.5%;
+}
+
+.odd {
+    background-color: #eef8ff;
+    width: 12.5%;
+}
+
+.day {
+    background-color: #eef8ff;
+    width: 11%;
+    text-align: center;
+    margin: 10px;
+    padding: 15px;
+}
+
+.main_div {
+    background-color: white;
+    height: auto;
+    padding: 5px;
+    margin: 5px;
+}
+
+.cities {
+    margin-top: 10px;
+}
+
+.main_table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.days_table {
+    width: 100%;
+}
+
+.time_text {
+    margin: 10px;
+    font-family: "Courier New", Courier, monospace;
+}
+
+.temperature_text {
+    color: rgba(1, 0, 27, 0.82);
+    font-family: "Courier New", Courier, monospace;
+    font-size: xx-large;
+    font-weight: bold;
+    margin-right: 5px;
+    display:inline-block;
+    vertical-align:middle;
+}
+
+.wind_speed_text, .humidity_text, .pressure_text {
+    color: rgba(1, 0, 27, 0.82);
+    font-family: "Courier New", Courier, monospace;
+    margin-right: 5px;
+    display:inline-block;
+    vertical-align:middle;
+}
+
+.temperature_icon {
+    height: 20px;
+    width: 20px;
+    display:inline-block;
+    vertical-align:middle;
+}
+
+.wind_icon, .humidity_icon, .pressure_icon {
+    height: 14px;
+    width: 14px;
+    margin-left: 5px;
+    display:inline-block;
+    vertical-align:middle;
+}
+
+.weather_icon {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    width: 90px;
+    height: 90px;
+}
+
+.bottom-image {
+    margin: 0;
+    height: 30%;
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+}

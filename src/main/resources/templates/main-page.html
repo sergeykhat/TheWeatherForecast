@@ -1,0 +1,130 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Forecast</title>
+    <script type="text/javascript" src="/webjars/jquery/3.3.1-1/jquery.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/base.css}"/>
+
+</head>
+<body>
+
+<center><select id="cities"></select></center>
+<div id="main_div">
+</div>
+
+<script th:inline="javascript">
+    var mainDiv = $('#main_div');
+    var daysTable = $('<table>').addClass("days_table");
+    mainDiv.append(daysTable);
+    fillCitySelect();
+    createTables();
+    fillTables();
+
+    function fillCitySelect() {
+        var citiesSelect = $('#cities');
+        var cities = [[${cities}]];
+        var currentCity = [[${currentCity}]];
+        citiesSelect.change(function () {
+            window.location.replace("/city/" + $(this).val());
+        });
+        for (var h = 0; h < cities.length; h++) {
+            citiesSelect.append($('<option>', {value: cities[h], text: cities[h]}));
+            if (currentCity === cities[h]) {
+                citiesSelect.val(cities[h]);
+            }
+        }
+    }
+
+    function createTables() {
+        for (var i = 1; i <= 7; i++) {
+            var forecastTable = $('<table>').attr('id', 'table_' + i).attr('cellspacing', '0').addClass("main_table");
+            daysTable.append($('<td>').attr("id", "day_" + i).addClass("day").on("click", {param: i}, showTable));
+            for (var j = 1; j <= 8; j++) {
+                var rowClass = j % 2 === 0 ? "even" : "odd";
+                forecastTable.append($('<td>').addClass(rowClass).append($('<center>')
+                    .append($('<tr>').attr('id', 'time_tr_' + i + "_" + j).addClass(rowClass)
+                        .append($('<p>').addClass("time_text").text((j - 1) * 3 + ":00")))
+                    .append($('<tr>').attr('id', 'temperature_tr_' + i + "_" + j))
+                    .append($('<tr>').attr('id', 'wind_speed_tr_' + i + "_" + j))
+                    .append($('<tr>').attr('id', 'humidity_tr_' + i + "_" + j))
+                    .append($('<tr>').attr('id', 'pressure_tr_' + i + "_" + j))
+                    .append($('<tr>').attr('id', 'weather_tr_' + i + "_" + j))));
+            }
+            if (i !== 1) {
+                forecastTable.hide();
+            } else {
+                $('#day_' + i).css('background-color', '#fffaf1');
+            }
+            mainDiv.append(forecastTable);
+        }
+    }
+
+    function fillTables() {
+        if ([[${status}]] === "error") {
+            alert([[${errorDescription}]]);
+        } else {
+
+            var forecast = [[${forecast}]];
+            var firstCell = 0;
+            var hour = 0;
+            for (hour; hour < 24; hour++) {
+                if (new Date(forecast[hour].date).getHours() % 3 === 0) {
+                    firstCell = new Date(forecast[hour].date).getHours() / 3 + 1;
+                    break;
+                }
+            }
+
+            const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const month = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"];
+
+            var count = hour;
+            for (var k = 1; k <= 7; k++) {
+                var date = new Date(forecast[count].date);
+                var day = weekday[date.getDay()];
+                $('#day_' + k).append(date.getDate() + " " + month[date.getMonth()] + " / " + day);
+
+                var p = 1;
+                if (k === 1) {
+                    p = firstCell;
+                }
+                for (p; p <= 8; p++) {
+                    var temperatureDiv = $('<div>')
+                        .append($('<p>').addClass("temperature_text").text(forecast[count].temperature < 0 ? "" : "+" + forecast[count].temperature))
+                        .append($('<img>').attr('src', "/images/icons/thermometer.png").addClass("temperature_icon"));
+                    var windDiv = $('<div>')
+                        .append($('<p>').addClass("wind_speed_text").text(forecast[count].windSpeed + "m/s"))
+                        .append($('<img>').attr('src', "/images/icons/wind2.png").addClass("wind_icon"));
+                    var humidityDiv = $('<div>')
+                        .append($('<p>').addClass("humidity_text").text(forecast[count].humidity + "%"))
+                        .append($('<img>').attr('src', "/images/icons/humidity.png").addClass("humidity_icon"));
+                    var pressureDiv = $('<div>')
+                        .append($('<p>').addClass("pressure_text").text(forecast[count].pressure + "mmgh"))
+                        .append($('<img>').attr('src', "/images/icons/meter.png").addClass("pressure_icon"));
+
+                    $('#temperature_tr_' + k + "_" + p).append(temperatureDiv);
+                    $('#wind_speed_tr_' + k + "_" + p).append(windDiv);
+                    $('#humidity_tr_' + k + "_" + p).append(humidityDiv);
+                    $('#pressure_tr_' + k + "_" + p).append(pressureDiv);
+                    $('#weather_tr_' + k + "_" + p).append($('<img>').attr('src', "/images/icons/" + forecast[count].icon + ".png").addClass("weather_icon"));
+                    count += 3;
+                }
+            }
+        }
+    }
+
+    function showTable(tableToSHow) {
+        for (var numOfTable = 1; numOfTable <= 7; numOfTable++) {
+            $('#day_' + numOfTable).css('background-color', '#eef8ff');
+            $('#table_' + numOfTable).hide();
+        }
+
+        $('#table_' + tableToSHow.data.param).show();
+        $('#day_' + tableToSHow.data.param).css('background-color', '#fffaf1');
+    }
+
+</script>
+
+<img class="bottom-image" th:src="@{/images/landscape.jpg}"/>
+<div class="provider"><h3>Forecast provided by darksky.net</h3></div>
+</body>
+</html>
