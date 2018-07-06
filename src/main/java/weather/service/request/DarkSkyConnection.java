@@ -23,7 +23,7 @@ public class DarkSkyConnection {
     @Value("${darksky.request.parameters}")
     private String parameters;
 
-    public String sendGetRequest(City city) {
+    public String sendGetRequest(City city) throws ConnectionException{
 
         String requestUrl = textUrl + key + "/" + city.getLatitude() + "," + city.getLongitude() + parameters;
         try {

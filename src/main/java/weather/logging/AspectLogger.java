@@ -32,7 +32,9 @@ public class AspectLogger {
 
     }
 
-    @AfterThrowing(value = "execution(* weather.service.request.DarkSkyConnection.*(..)) || ", throwing = "ex")
+    @AfterThrowing(value="execution(* weather.service.request.DarkSkyConnection.*(..)) || " +
+            "execution(* weather.utils.Converter.*(..)) || " +
+            "execution(* weather.controller.MainPageController.*(..))", throwing = "ex")
     public void logException(JoinPoint point, Exception ex) {
         logger.log(Level.WARNING, "Exception during calling method: " + point.getSignature().getName() + " ", ex);
     }

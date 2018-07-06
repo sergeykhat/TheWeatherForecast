@@ -15,7 +15,7 @@ import java.util.List;
 public class Converter {
     private final ObjectMapper mapper = new ObjectMapper();
 
-    public List<HourlyForecast> convertToHourlyForecasts(String response, City city) {
+    public List<HourlyForecast> convertToHourlyForecasts(String response, City city) throws ParsingException {
         List<HourlyForecast> hourlyForecastList = new ArrayList<>();
         ForecastDto forecast;
         try {
