@@ -12,12 +12,17 @@
 </div>
 
 <script th:inline="javascript">
+
     var mainDiv = $('#main_div');
     var daysTable = $('<table>').addClass("days_table");
     mainDiv.append(daysTable);
     fillCitySelect();
     createTables();
-    fillTables();
+    if ([[${status}]] === "ok") {
+        fillTables();
+    } else {
+        alert([[${errorDescription}]])
+    }
 
     function fillCitySelect() {
         var citiesSelect = $('#cities');
@@ -59,55 +64,50 @@
     }
 
     function fillTables() {
-        if ([[${status}]] === "error") {
-            alert([[${errorDescription}]]);
-        } else {
-
-            var forecast = [[${forecast}]];
-            var firstCell = 0;
-            var hour = 0;
-            for (hour; hour < 24; hour++) {
-                if (new Date(forecast[hour].date).getHours() % 3 === 0) {
-                    firstCell = new Date(forecast[hour].date).getHours() / 3 + 1;
-                    break;
-                }
+        var forecast = [[${forecast}]];
+        var firstCell = 0;
+        var hour = 0;
+        for (hour; hour < 24; hour++) {
+            if (new Date(forecast[hour].date).getHours() % 3 === 0) {
+                firstCell = new Date(forecast[hour].date).getHours() / 3 + 1;
+                break;
             }
+        }
 
-            const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-            const month = ["January", "February", "March", "April", "May", "June",
-                "July", "August", "September", "October", "November", "December"];
+        const weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+        const month = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"];
 
-            var count = hour;
-            for (var k = 1; k <= 7; k++) {
-                var date = new Date(forecast[count].date);
-                var day = weekday[date.getDay()];
-                $('#day_' + k).append(date.getDate() + " " + month[date.getMonth()] + " / " + day);
+        var count = hour;
+        for (var k = 1; k <= 7; k++) {
+            var date = new Date(forecast[count].date);
+            var day = weekday[date.getDay()];
+            $('#day_' + k).append(date.getDate() + " " + month[date.getMonth()] + " / " + day);
 
-                var p = 1;
-                if (k === 1) {
-                    p = firstCell;
-                }
-                for (p; p <= 8; p++) {
-                    var temperatureDiv = $('<div>')
-                        .append($('<p>').addClass("temperature_text").text(forecast[count].temperature < 0 ? "" : "+" + forecast[count].temperature))
-                        .append($('<img>').attr('src', "/images/icons/thermometer.png").addClass("temperature_icon"));
-                    var windDiv = $('<div>')
-                        .append($('<p>').addClass("wind_speed_text").text(forecast[count].windSpeed + "m/s"))
-                        .append($('<img>').attr('src', "/images/icons/wind2.png").addClass("wind_icon"));
-                    var humidityDiv = $('<div>')
-                        .append($('<p>').addClass("humidity_text").text(forecast[count].humidity + "%"))
-                        .append($('<img>').attr('src', "/images/icons/humidity.png").addClass("humidity_icon"));
-                    var pressureDiv = $('<div>')
-                        .append($('<p>').addClass("pressure_text").text(forecast[count].pressure + "mmgh"))
-                        .append($('<img>').attr('src', "/images/icons/meter.png").addClass("pressure_icon"));
+            var p = 1;
+            if (k === 1) {
+                p = firstCell;
+            }
+            for (p; p <= 8; p++) {
+                var temperatureDiv = $('<div>')
+                    .append($('<p>').addClass("temperature_text").text((forecast[count].temperature < 0 ? "-" : "+") + forecast[count].temperature))
+                    .append($('<img>').attr('src', "/images/icons/thermometer.png").addClass("temperature_icon"));
+                var windDiv = $('<div>')
+                    .append($('<p>').addClass("wind_speed_text").text(forecast[count].windSpeed + "m/s"))
+                    .append($('<img>').attr('src', "/images/icons/wind2.png").addClass("wind_icon"));
+                var humidityDiv = $('<div>')
+                    .append($('<p>').addClass("humidity_text").text(forecast[count].humidity + "%"))
+                    .append($('<img>').attr('src', "/images/icons/humidity.png").addClass("humidity_icon"));
+                var pressureDiv = $('<div>')
+                    .append($('<p>').addClass("pressure_text").text(forecast[count].pressure + "mmgh"))
+                    .append($('<img>').attr('src', "/images/icons/meter.png").addClass("pressure_icon"));
 
-                    $('#temperature_tr_' + k + "_" + p).append(temperatureDiv);
-                    $('#wind_speed_tr_' + k + "_" + p).append(windDiv);
-                    $('#humidity_tr_' + k + "_" + p).append(humidityDiv);
-                    $('#pressure_tr_' + k + "_" + p).append(pressureDiv);
-                    $('#weather_tr_' + k + "_" + p).append($('<img>').attr('src', "/images/icons/" + forecast[count].icon + ".png").addClass("weather_icon"));
-                    count += 3;
-                }
+                $('#temperature_tr_' + k + "_" + p).append(temperatureDiv);
+                $('#wind_speed_tr_' + k + "_" + p).append(windDiv);
+                $('#humidity_tr_' + k + "_" + p).append(humidityDiv);
+                $('#pressure_tr_' + k + "_" + p).append(pressureDiv);
+                $('#weather_tr_' + k + "_" + p).append($('<img>').attr('src', "/images/icons/" + forecast[count].icon + ".png").addClass("weather_icon"));
+                count += 3;
             }
         }
     }

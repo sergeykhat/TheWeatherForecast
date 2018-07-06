@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import weather.service.DarkSkyService;
 import weather.model.Forecast;
-import weather.data.City;
+import weather.model.City;
 
 @Service
 @Qualifier("CachedDarkSkyService")

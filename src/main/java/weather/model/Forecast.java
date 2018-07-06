@@ -1,6 +1,6 @@
 package weather.model;
 
-import weather.exception.CustomException;
+import weather.exception.ForecastException;
 
 import java.util.List;
 
@@ -9,15 +9,14 @@ public class Forecast {
     public enum Status {
         OK, ERROR;
 
-        private CustomException exception;
+        private ForecastException exception;
 
-        public CustomException getException() {
+        public ForecastException getException() {
             return exception;
         }
 
-        public Status setException(CustomException exception) {
+        public void setException(ForecastException exception) {
             this.exception = exception;
-            return this;
         }
     }
 
@@ -25,6 +24,12 @@ public class Forecast {
     private List<HourlyForecast> hourlyForecasts;
 
     public Forecast(Status status, List<HourlyForecast> hourlyForecasts) {
+        this.status = status;
+        this.hourlyForecasts = hourlyForecasts;
+    }
+
+    public Forecast(Status status, List<HourlyForecast> hourlyForecasts, ForecastException exception) {
+        status.setException(exception);
         this.status = status;
         this.hourlyForecasts = hourlyForecasts;
     }

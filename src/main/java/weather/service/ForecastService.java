@@ -2,7 +2,7 @@ package weather.service;
 
 
 import weather.model.HourlyForecast;
-import weather.data.City;
+import weather.model.City;
 
 import java.util.List;
 

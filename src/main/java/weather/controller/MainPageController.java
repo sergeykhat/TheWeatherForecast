@@ -7,7 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import weather.data.City;
+import weather.model.City;
 import weather.model.Forecast;
 import weather.service.DarkSkyService;
 
@@ -31,26 +31,28 @@ public class MainPageController {
 
     @RequestMapping(value = "/city/{city}")
     public String showForecastByCity(@PathVariable("city") String cityName, Model model) {
+        model.addAttribute("cities", City.values());
         try {
             fillModel(model, City.valueOf(cityName));
         } catch (IllegalArgumentException e) {
             model.addAttribute("status", "error");
             model.addAttribute("errorDescription", "There is no such a city");
+            model.addAttribute("currentCity", "");
         }
         return "main-page";
     }
 
     private void fillModel(Model model, City city) {
         Forecast forecast = service.getForecast(city);
+        model.addAttribute("currentCity", city);
         if (forecast.getStatus() == Forecast.Status.OK) {
             model.addAttribute("status", "ok");
             model.addAttribute("forecast", forecast.getHourlyForecasts());
-            model.addAttribute("cities", City.values());
-            model.addAttribute("currentCity", city);
-        } else {
-            model.addAttribute("status", "error");
-            model.addAttribute("errorDescription", forecast.getStatus().getException().getMessage());
+            return;
         }
+        System.out.println("ERROR " + forecast.getStatus().getException());
+        model.addAttribute("status", "error");
+        model.addAttribute("errorDescription", forecast.getStatus().getException().getMessage());
     }
 
 }

@@ -3,14 +3,14 @@ package weather.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import weather.exception.CustomException;
+import weather.exception.ForecastException;
 import weather.service.DarkSkyService;
 import weather.service.ForecastService;
 import weather.model.Forecast;
 import weather.model.HourlyForecast;
 import weather.service.request.DarkSkyConnection;
 import weather.utils.Converter;
-import weather.data.City;
+import weather.model.City;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +39,8 @@ public class DarkSkyServiceImpl implements DarkSkyService {
             service.deleteAll(city);
             service.create(hourlyForecasts);
             return new Forecast(OK, hourlyForecasts);
-        } catch (CustomException e) {
-            return new Forecast(ERROR.setException(e), new ArrayList<>());
+        } catch (ForecastException e) {
+            return new Forecast(ERROR, new ArrayList<>(), e);
         }
     }
 

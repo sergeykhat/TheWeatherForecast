@@ -1,7 +1,7 @@
 package weather.service;
 
 import weather.model.Forecast;
-import weather.data.City;
+import weather.model.City;
 
 public interface DarkSkyService {
 

@@ -2,8 +2,8 @@ package weather.service.request;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import weather.exception.CustomException;
-import weather.data.City;
+import weather.exception.ConnectionException;
+import weather.model.City;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;
@@ -23,7 +23,7 @@ public class DarkSkyConnection {
     @Value("${darksky.request.parameters}")
     private String parameters;
 
-    public String sendGetRequest(City city) throws CustomException {
+    public String sendGetRequest(City city) {
 
         String requestUrl = textUrl + key + "/" + city.getLatitude() + "," + city.getLongitude() + parameters;
         try {
@@ -39,7 +39,7 @@ public class DarkSkyConnection {
             }
             return response.toString();
         } catch (IOException e) {
-            throw new CustomException("Error occurred during connection to Darksky API " + requestUrl, e);
+            throw new ConnectionException("Error occurred during connection to Darksky API " + requestUrl, e);
         }
     }
 

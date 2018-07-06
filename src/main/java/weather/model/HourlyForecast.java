@@ -1,16 +1,18 @@
 package weather.model;
 
-import weather.data.City;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table (name = "hourly_forecast")
+@SuppressWarnings("unused")
 public class HourlyForecast {
 
     @Id
     @Column
+    @JsonIgnore
     @GeneratedValue (strategy = GenerationType.AUTO)
     private long id;
 
@@ -22,7 +24,7 @@ public class HourlyForecast {
     private int temperature;
 
     @Column (name = "humidity")
-    private double humidity;
+    private int humidity;
 
     @Column (name = "pressure")
     private int pressure;
@@ -36,6 +38,9 @@ public class HourlyForecast {
     @Column (name = "date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date date;
+
+    @JsonIgnore
+    private Long time;
 
     public long getId() {
         return id;
@@ -61,11 +66,11 @@ public class HourlyForecast {
         this.temperature = temperature;
     }
 
-    public double getHumidity() {
+    public int getHumidity() {
         return humidity;
     }
 
-    public void setHumidity(double humidity) {
+    public void setHumidity(int humidity) {
         this.humidity = humidity;
     }
 
@@ -100,4 +105,13 @@ public class HourlyForecast {
     public void setDate(Date date) {
         this.date = date;
     }
+
+    public Long getTime() {
+        return time;
+    }
+
+    public void setTime(Long time) {
+        this.time = time;
+    }
+
 }

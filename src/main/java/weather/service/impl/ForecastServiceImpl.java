@@ -1,11 +1,12 @@
 package weather.service.impl;
 
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import weather.service.ForecastService;
-import weather.dao.ForecastDao;
+import weather.model.City;
 import weather.model.HourlyForecast;
-import weather.data.City;
+import weather.dao.ForecastRepository;
+import weather.service.ForecastService;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -13,39 +14,39 @@ import java.util.List;
 @Service
 public class ForecastServiceImpl implements ForecastService {
 
-    private ForecastDao dao;
+    private ForecastRepository repository;
 
     @Autowired
-    public ForecastServiceImpl(ForecastDao dao) {
-        this.dao = dao;
-    }
-    
-    @Transactional
-    public void create(HourlyForecast hourlyForecast) {
-        dao.save(hourlyForecast);
+    public ForecastServiceImpl(ForecastRepository repository) {
+        this.repository = repository;
     }
 
     @Transactional
-    public void create(Iterable <HourlyForecast> hourlyForecasts) {
-        dao.saveAll(hourlyForecasts);
+    public void create(HourlyForecast hourlyForecast) {
+        repository.save(hourlyForecast);
+    }
+
+    @Transactional
+    public void create(Iterable<HourlyForecast> hourlyForecasts) {
+        repository.saveAll(hourlyForecasts);
     }
 
     public HourlyForecast get(City city) {
-        return dao.get(city);
+        return repository.findByCity(city);
     }
 
     public List<HourlyForecast> getAll(City city) {
-        return dao.getAll(city);
+        return Lists.newArrayList(repository.findAllByCity(city));
     }
 
     @Transactional
-    public void update(HourlyForecast hourlyForecast){
-        dao.save(hourlyForecast);
+    public void update(HourlyForecast hourlyForecast) {
+        repository.save(hourlyForecast);
     }
 
     @Transactional
     public void deleteAll(City city) {
-        dao.deleteAllByCity(city);
+        repository.deleteAllByCity(city);
     }
 
 }
